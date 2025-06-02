@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智程职通</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    backgroundColor: {
+                        'primary': '#1a365d',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .hidden {
+            display: none;
+        }
+        .hero-section {
+            background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);  /* 半透明黑色遮罩 */
+        }
+        .hero-content {
+            position: relative;
+            z-index: 1;  /* 确保内容在遮罩层上方 */
+        }
+        @media (min-width: 640px) {
+            .sm\:flex {
+                display: flex;
+            }
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 50;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .dropdown-content a {
+            padding: 0.5rem 1rem;
+            display: block;
+            color: #1a202c;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .dropdown-content a:hover {
+            background-color: #f7fafc;
+            color: #2b6cb0;
+        }
+        /* 确保下拉菜单可以被点击 */
+        .dropdown-content::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 0;
+            right: 0;
+            height: 10px;
+        }
+        /* 导航栏按钮样式 */
+        .nav-button {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem;
+            color: white;
+            transition: all 0.2s;
+        }
+        .nav-button:hover {
+            color: #e2e8f0;
+        }
+        /* 移动端导航样式 */
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 64px;
+            left: 0;
+            right: 0;
+            background-color: #1a365d;
+            padding: 1rem;
+            z-index: 40;
+        }
+        .mobile-menu.active {
+            display: block;
+        }
+        .mobile-menu-item {
+            padding: 0.75rem 1rem;
+            color: white;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .mobile-submenu {
+            padding-left: 1.5rem;
+            display: none;
+        }
+        .mobile-submenu.active {
+            display: block;
+        }
+        .mobile-menu-button {
+            display: none;
+        }
+        @media (max-width: 768px) {
+            .desktop-menu {
+                display: none;
+            }
+            .mobile-menu-button {
+                display: block;
+            }
+            .dropdown-content {
+                position: static;
+                box-shadow: none;
+                margin-top: 0;
+            }
+            .mobile-menu .dropdown-content {
+                display: none;
+                position: static;
+                background: transparent;
+                box-shadow: none;
+                padding-left: 1.5rem;
+            }
+            .mobile-menu .dropdown-content a {
+                color: white;
+            }
+            .mobile-menu .dropdown-content a:hover {
+                background-color: rgba(255,255,255,0.1);
+                color: white;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="bg-primary text-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="index.html" class="text-xl font-bold">
+                    </a>
+                </div>
+
+                <!-- 移动端菜单按钮 -->
+                <button class="mobile-menu-button p-4 focus:outline-none" onclick="toggleMobileMenu()">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+
+                <!-- 桌面端菜单 -->
+                <div class="desktop-menu flex items-center space-x-4">
+                    <a href="index.html" class="hover:text-gray-300">
+                        返回主页
+                    </a>
+
+                    <!-- 求职信息下拉菜单 -->
+                    <div class="dropdown relative">
+                        <button class="nav-button">
+                            求职信息
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="job-info.html#port" class="block px-4 py-2 hover:bg-gray-100">青岛港务局</a>
+                            <a href="job-info.html#local" class="block px-4 py-2 hover:bg-gray-100">本地求职</a>
+                            <a href="job-info.html#gov" class="block px-4 py-2 hover:bg-gray-100">国企考编</a>
+                            <a href="job-info.html#overseas" class="block px-4 py-2 hover:bg-gray-100">出国劳务</a>
+                        </div>
+                    </div>
+
+                    <!-- 人才招聘下拉菜单 -->
+                    <div class="dropdown relative">
+                        <button class="nav-button">
+                            人才招聘
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="recruitment.html#special" class="block px-4 py-2 hover:bg-gray-100">特种作业</a>
+                            <a href="recruitment.html#care" class="block px-4 py-2 hover:bg-gray-100">月嫂陪护</a>
+                            <a href="recruitment.html#graduate" class="block px-4 py-2 hover:bg-gray-100">高校毕业生</a>
+                            <a href="recruitment.html#safety" class="block px-4 py-2 hover:bg-gray-100">注册安全工程师</a>
+                            <a href="recruitment.html#accountant" class="block px-4 py-2 hover:bg-gray-100">注册会计师</a>
+                            <a href="recruitment.html#fire" class="block px-4 py-2 hover:bg-gray-100">注册消防工程师</a>
+                        </div>
+                    </div>
+
+                    <!-- 零工市场下拉菜单 -->
+                    <div class="dropdown relative">
+                        <button class="nav-button">
+                            零工市场
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="part-time.html#electrician" class="block px-4 py-2 hover:bg-gray-100">电工</a>
+                            <a href="part-time.html#welder" class="block px-4 py-2 hover:bg-gray-100">焊工</a>
+                            <a href="part-time.html#climber" class="block px-4 py-2 hover:bg-gray-100">登高</a>
+                            <a href="part-time.html#mason" class="block px-4 py-2 hover:bg-gray-100">瓦工</a>
+                            <a href="part-time.html#concrete" class="block px-4 py-2 hover:bg-gray-100">泥工</a>
+                            <a href="part-time.html#carpenter" class="block px-4 py-2 hover:bg-gray-100">木工</a>
+                            <a href="part-time.html#hvac" class="block px-4 py-2 hover:bg-gray-100">制冷工</a>
+                            <a href="part-time.html#scaffold" class="block px-4 py-2 hover:bg-gray-100">架子工</a>
+                        </div>
+                    </div>
+
+                    <!-- 证书报名下拉菜单 -->
+                    <div class="dropdown relative">
+                        <button class="nav-button">
+                            证书报名
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="certificates.html#special-work" class="block px-4 py-2 hover:bg-gray-100">特种作业证</a>
+                            <a href="certificates.html#special-equipment" class="block px-4 py-2 hover:bg-gray-100">特种设备作业证</a>
+                            <a href="certificates.html#safety-manager" class="block px-4 py-2 hover:bg-gray-100">安全管理员</a>
+                            <a href="certificates.html#health-manager" class="block px-4 py-2 hover:bg-gray-100">职业健康管理员</a>
+                            <a href="certificates.html#fireworks" class="block px-4 py-2 hover:bg-gray-100">烟花爆竹</a>
+                            <a href="certificates.html#fire-operator" class="block px-4 py-2 hover:bg-gray-100">消防操作员</a>
+                            <a href="certificates.html#safety-engineer" class="block px-4 py-2 hover:bg-gray-100">注册安全工程师</a>
+                            <a href="certificates.html#constructor-2" class="block px-4 py-2 hover:bg-gray-100">二级建造师</a>
+                            <a href="certificates.html#constructor-1" class="block px-4 py-2 hover:bg-gray-100">一级建造师</a>
+                            <a href="certificates.html#skill" class="block px-4 py-2 hover:bg-gray-100">职业技能证书</a>
+                            <a href="certificates.html#other" class="block px-4 py-2 hover:bg-gray-100">其他证书咨询</a>
+                        </div>
+                    </div>
+
+                    <a href="safety-service.html" class="nav-button">
+                        安全服务
+                    </a>
+                    <a href="about.html" class="nav-button">
+                        关于我们
+                    </a>
+                </div>
+            </div>
+
+            <!-- 移动端菜单 -->
+            <div class="mobile-menu" id="mobile-menu">
+                <a href="index.html" class="mobile-menu-item block">返回主页</a>
+                
+                <!-- 求职信息移动端下拉 -->
+                <div class="mobile-menu-item">
+                    <div class="flex justify-between items-center" onclick="toggleSubmenu('job-info-mobile')">
+                        <span>求职信息</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <div class="mobile-submenu" id="job-info-mobile">
+                        <a href="job-info.html#port" class="block py-2">青岛港务局</a>
+                        <a href="job-info.html#local" class="block py-2">本地求职</a>
+                        <a href="job-info.html#gov" class="block py-2">国企考编</a>
+                        <a href="job-info.html#overseas" class="block py-2">出国劳务</a>
+                    </div>
+                </div>
+
+                <!-- 人才招聘移动端下拉 -->
+                <div class="mobile-menu-item">
+                    <div class="flex justify-between items-center" onclick="toggleSubmenu('recruitment-mobile')">
+                        <span>人才招聘</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <div class="mobile-submenu" id="recruitment-mobile">
+                        <a href="recruitment.html#special" class="block py-2">特种作业</a>
+                        <a href="recruitment.html#care" class="block py-2">月嫂陪护</a>
+                        <a href="recruitment.html#graduate" class="block py-2">高校毕业生</a>
+                        <a href="recruitment.html#safety" class="block py-2">注册安全工程师</a>
+                        <a href="recruitment.html#accountant" class="block py-2">注册会计师</a>
+                        <a href="recruitment.html#fire" class="block py-2">注册消防工程师</a>
+                    </div>
+                </div>
+
+                <!-- 零工市场移动端下拉 -->
+                <div class="mobile-menu-item">
+                    <div class="flex justify-between items-center" onclick="toggleSubmenu('part-time-mobile')">
+                        <span>零工市场</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <div class="mobile-submenu" id="part-time-mobile">
+                        <a href="part-time.html#electrician" class="block py-2">电工</a>
+                        <a href="part-time.html#welder" class="block py-2">焊工</a>
+                        <a href="part-time.html#climber" class="block py-2">登高</a>
+                        <a href="part-time.html#mason" class="block py-2">瓦工</a>
+                        <a href="part-time.html#concrete" class="block py-2">泥工</a>
+                        <a href="part-time.html#carpenter" class="block py-2">木工</a>
+                        <a href="part-time.html#hvac" class="block py-2">制冷工</a>
+                        <a href="part-time.html#scaffold" class="block py-2">架子工</a>
+                    </div>
+                </div>
+
+                <!-- 证书报名移动端下拉 -->
+                <div class="mobile-menu-item">
+                    <div class="flex justify-between items-center" onclick="toggleSubmenu('certificates-mobile')">
+                        <span>证书报名</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </div>
+                    <div class="mobile-submenu" id="certificates-mobile">
+                        <a href="certificates.html#special-work" class="block py-2">特种作业证</a>
+                        <a href="certificates.html#special-equipment" class="block py-2">特种设备作业证</a>
+                        <a href="certificates.html#safety-manager" class="block py-2">安全管理员</a>
+                        <a href="certificates.html#health-manager" class="block py-2">职业健康管理员</a>
+                        <a href="certificates.html#fireworks" class="block py-2">烟花爆竹</a>
+                        <a href="certificates.html#fire-operator" class="block py-2">消防操作员</a>
+                        <a href="certificates.html#safety-engineer" class="block py-2">注册安全工程师</a>
+                        <a href="certificates.html#constructor-2" class="block py-2">二级建造师</a>
+                        <a href="certificates.html#constructor-1" class="block py-2">一级建造师</a>
+                        <a href="certificates.html#skill" class="block py-2">职业技能证书</a>
+                        <a href="certificates.html#other" class="block py-2">其他证书咨询</a>
+                    </div>
+                </div>
+
+                <a href="safety-service.html" class="mobile-menu-item block">安全服务</a>
+                <a href="about.html" class="mobile-menu-item block">关于我们</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="min-h-screen bg-gray-50">
+        <!-- 头部横幅 -->
+        <div class="hero-section bg-primary text-white py-24">
+            <div class="hero-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h1 class="text-5xl font-bold mb-6">
+                    临沂智程职通劳务有限公司
+                </h1>
+                <p class="text-2xl">
+                    专业提供劳务派遣、人才招聘、职业技能培训、特种作业操作证办理等综合性人力资源服务
+                </p>
+            </div>
+        </div>
+
+        <!-- 服务卡片区域 -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">业务范围</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- 劳务派遣卡片 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">劳务派遣</h3>
+                        <ul class="text-gray-600 space-y-2">
+                            <li>专业技术工人派遣</li>
+                            <li>建筑工程施工人员</li>
+                            <li>企业生产工人派遣</li>
+                            <li>临时用工解决方案</li>
+                        </ul>
+                        <a href="#" class="mt-4 inline-block text-blue-600 hover:text-blue-800">
+                            了解更多 →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 技能培训卡片 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">技能培训</h3>
+                        <ul class="text-gray-600 space-y-2">
+                            <li>特种作业培训</li>
+                            <li>职业技能培训</li>
+                            <li>安全生产培训</li>
+                            <li>岗位技能提升</li>
+                        </ul>
+                        <a href="#" class="mt-4 inline-block text-blue-600 hover:text-blue-800">
+                            查看详情 →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 证书办理卡片 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">证书办理</h3>
+                        <ul class="text-gray-600 space-y-2">
+                            <li>特种作业操作证</li>
+                            <li>职业资格证书</li>
+                            <li>安全生产许可证</li>
+                            <li>职业技能等级证</li>
+                        </ul>
+                        <a href="#" class="mt-4 inline-block text-blue-600 hover:text-blue-800">
+                            立即办理 →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 人才服务卡片 -->
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+                    <div class="p-6">
+                        <h3 class="text-xl font-semibold text-gray-900 mb-2">人才服务</h3>
+                        <ul class="text-gray-600 space-y-2">
+                            <li>人才招聘</li>
+                            <li>就业推荐</li>
+                            <li>人才测评</li>
+                            <li>职业规划</li>
+                        </ul>
+                        <a href="#" class="mt-4 inline-block text-blue-600 hover:text-blue-800">
+                            了解详情 →
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 关于我们 -->
+        <div class="bg-white py-12">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">关于我们</h2>
+                <div class="max-w-3xl mx-auto text-gray-600 text-center">
+                    <p class="mb-4">
+                        临沂智程职通劳务有限公司是一家专业从事劳务派遣、人才招聘、职业技能培训的综合性人力资源服务企业。
+                    </p>
+                    <p class="mb-4">
+                        公司拥有专业的管理团队和丰富的行业经验，致力于为企业提供优质的人力资源解决方案，为求职者提供优质的就业机会。
+                    </p>
+                    <p class="mb-4">
+                        我们始终秉持"诚信为本、服务至上"的经营理念，竭诚为广大企业和求职者提供专业、高效、优质的服务。
+                    </p>
+                    <p>
+                        联系电话：0539-1234567<br>
+                        工作时间：周一至周五 8:30-17:30
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">联系我们</h3>
+                    <p>地址：山东省临沂市沂南县迎宾大道116号</p>
+                    <p>电话：0539-1234567</p>
+                    <p>邮箱：contact@zhicheng.com</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">业务范围</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="hover:text-gray-300">劳务派遣</a></li>
+                        <li><a href="#" class="hover:text-gray-300">技能培训</a></li>
+                        <li><a href="#" class="hover:text-gray-300">证书办理</a></li>
+                        <li><a href="#" class="hover:text-gray-300">人才服务</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">关注我们</h3>
+                    <p>关注我们的微信公众号，获取最新招聘信息</p>
+                    <p class="mt-2">微信号：zhicheng_labor</p>
+                </div>
+            </div>
+            <div class="mt-8 pt-8 border-t border-gray-700 text-center">
+                <p>© 2024 临沂智程职通劳务有限公司 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('certificateForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const data = Object.fromEntries(formData.entries());
+            console.log('Form submitted:', data);
+            alert('报名信息已提交，我们会尽快与您联系！');
+            window.location.href = '#';
+        });
+
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        function toggleSubmenu(id) {
+            const submenu = document.getElementById(id);
+            submenu.classList.toggle('active');
+        }
+    </script>
+</body>
+</html> 
